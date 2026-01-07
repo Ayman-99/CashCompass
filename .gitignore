@@ -1,0 +1,63 @@
+# Legacy App (nested git repository)
+FinanceApp Legecy/
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+
+# Build outputs
+dist/
+build/
+**/dist/
+**/build/
+
+# Logs
+logs/
+*.log
+**/logs/
+**/*.log
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.cursor/
+
+# Vite
+.vite/
+**/.vite/
+
+# PM2
+.pm2/
+ecosystem.config.js.bak
+
+# Database
+*.sqlite
+*.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Prisma
+**/prisma/migrations/
+

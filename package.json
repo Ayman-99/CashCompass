@@ -1,0 +1,29 @@
+{
+  "name": "finance-app-vue",
+  "version": "1.0.0",
+  "description": "Finance Analytics Dashboard - Vue.js Frontend",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "dev:all": "concurrently \"npm run dev\" \"npm run backend:dev\"",
+    "backend:dev": "cd server && npm run dev",
+    "backend:start": "cd server && npm start"
+  },
+  "dependencies": {
+    "vue": "^3.4.15",
+    "vue-router": "^4.2.5",
+    "pinia": "^2.1.7",
+    "axios": "^1.6.5",
+    "chart.js": "^4.4.1",
+    "vue-chartjs": "^5.3.0",
+    "date-fns": "^3.0.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.3",
+    "vite": "^5.0.11",
+    "concurrently": "^8.2.2"
+  }
+}
+

@@ -1,0 +1,931 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-primary: #f5f7fa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f8f9ff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --border-color: #eeeeee;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --input-border: #dddddd;
+  --link-color: #007bff;
+  --link-hover: #0056b3;
+  --nav-bg: #ffffff;
+  --nav-text: #333333;
+  --nav-shadow: rgba(0, 0, 0, 0.1);
+  --loading-color: #666666;
+  --error-bg: #f8d7da;
+  --error-text: #721c24;
+  --success-bg: #d4edda;
+  --success-text: #155724;
+  --label-color: #555555;
+  --focus-color: #007bff;
+  --focus-shadow: rgba(0, 123, 255, 0.1);
+  --positive-color: #28a745;
+  --negative-color: #dc3545;
+  --warning-color: #ff9800;
+  --warning-bg: #fff3e0;
+  --warning-text: #e65100;
+  --info-color: #2196f3;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --text-primary: #e6edf3;
+  --text-secondary: #c9d1d9;
+  --text-tertiary: #8b949e;
+  --border-color: #30363d;
+  --shadow: rgba(0, 0, 0, 0.6);
+  --card-bg: #161b22;
+  --input-bg: #0d1117;
+  --input-border: #30363d;
+  --link-color: #58a6ff;
+  --link-hover: #79c0ff;
+  --nav-bg: #161b22;
+  --nav-text: #e6edf3;
+  --nav-shadow: rgba(0, 0, 0, 0.8);
+  --loading-color: #8b949e;
+  --error-bg: #490202;
+  --error-text: #ff7b72;
+  --success-bg: #033a16;
+  --success-text: #7ee787;
+  --label-color: #c9d1d9;
+  --focus-color: #58a6ff;
+  --focus-shadow: rgba(88, 166, 255, 0.2);
+  --positive-color: #3fb950;
+  --negative-color: #f85149;
+  --warning-color: #d29922;
+  --warning-bg: #3d2914;
+  --warning-text: #d29922;
+  --info-color: #58a6ff;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 4px var(--shadow);
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--label-color);
+  transition: color 0.3s ease;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--focus-color);
+  box-shadow: 0 0 0 3px var(--focus-shadow);
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--loading-color);
+  transition: color 0.3s ease;
+}
+
+.error {
+  background-color: var(--error-bg);
+  color: var(--error-text);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.success {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  animation: slideInDown 0.3s ease-out;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+/* Page Transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Page Fade In */
+.container {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Card Animations */
+.card {
+  animation: fadeIn 0.4s ease-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+/* Button Animations */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
+/* Loading Spinner */
+.loading {
+  position: relative;
+  min-height: 100px;
+}
+
+.loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--link-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading::after {
+  content: 'Loading...';
+  position: absolute;
+  top: calc(50% + 30px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--text-secondary);
+  font-size: 14px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Error/Success Messages */
+.error {
+  animation: slideInDown 0.3s ease-out, shake 0.5s ease-out 0.3s;
+}
+
+.success {
+  animation: slideInDown 0.3s ease-out;
+}
+
+/* Modal Animations */
+.modal-overlay {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Table Row Animations */
+.data-table tbody tr {
+  animation: fadeIn 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.data-table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.data-table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.data-table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.data-table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+.data-table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+.data-table tbody tr:nth-child(n+6) { animation-delay: 0.3s; }
+
+.data-table tbody tr:hover {
+  transform: scale(1.01);
+  transition: transform 0.2s ease;
+}
+
+/* Grid Item Stagger Animation */
+.accounts-grid > *,
+.categories-grid > *,
+.currencies-grid > * {
+  animation: fadeIn 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.accounts-grid > *:nth-child(1) { animation-delay: 0.05s; }
+.accounts-grid > *:nth-child(2) { animation-delay: 0.1s; }
+.accounts-grid > *:nth-child(3) { animation-delay: 0.15s; }
+.accounts-grid > *:nth-child(4) { animation-delay: 0.2s; }
+.accounts-grid > *:nth-child(5) { animation-delay: 0.25s; }
+.accounts-grid > *:nth-child(6) { animation-delay: 0.3s; }
+.accounts-grid > *:nth-child(n+7) { animation-delay: 0.35s; }
+
+.categories-grid > *:nth-child(1) { animation-delay: 0.05s; }
+.categories-grid > *:nth-child(2) { animation-delay: 0.1s; }
+.categories-grid > *:nth-child(3) { animation-delay: 0.15s; }
+.categories-grid > *:nth-child(4) { animation-delay: 0.2s; }
+.categories-grid > *:nth-child(5) { animation-delay: 0.25s; }
+.categories-grid > *:nth-child(6) { animation-delay: 0.3s; }
+.categories-grid > *:nth-child(n+7) { animation-delay: 0.35s; }
+
+.currencies-grid > *:nth-child(1) { animation-delay: 0.05s; }
+.currencies-grid > *:nth-child(2) { animation-delay: 0.1s; }
+.currencies-grid > *:nth-child(3) { animation-delay: 0.15s; }
+.currencies-grid > *:nth-child(4) { animation-delay: 0.2s; }
+.currencies-grid > *:nth-child(5) { animation-delay: 0.25s; }
+.currencies-grid > *:nth-child(6) { animation-delay: 0.3s; }
+.currencies-grid > *:nth-child(n+7) { animation-delay: 0.35s; }
+
+/* Input Focus Animation */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  animation: pulse 0.3s ease-out;
+}
+
+/* Badge Animations */
+.badge {
+  animation: scaleIn 0.2s ease-out;
+  transition: transform 0.2s ease;
+}
+
+.badge:hover {
+  transform: scale(1.1);
+}
+
+/* Skeleton Loading */
+@keyframes skeleton {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 0px,
+    var(--border-color) 40px,
+    var(--bg-tertiary) 80px
+  );
+  background-size: 200px 100%;
+  animation: skeleton 1.5s ease-in-out infinite;
+}
+
+/* Chart Container Animation */
+.chart-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Stats Card Animation */
+.stat-card {
+  animation: slideInUp 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Progress Bar Animation */
+.progress-bar,
+.progress-bar-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill,
+.progress-bar {
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* Number Counter Animation */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-value,
+.summary-value {
+  animation: countUp 0.6s ease-out;
+}
+
+/* Empty State Animation */
+.empty-state {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.empty-state::before {
+  content: '📭';
+  display: block;
+  font-size: 48px;
+  margin-bottom: 16px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+/* Notification/Toast Animation */
+.notification {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.notification.exit {
+  animation: slideInRight 0.3s ease-out reverse;
+}
+
+/* Search Input Animation */
+.search-input:focus {
+  animation: pulse 0.3s ease-out;
+  transform: scale(1.02);
+}
+
+/* Badge Pulse on Update */
+.badge.new {
+  animation: pulse 0.5s ease-out;
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .loading::before,
+  .loading::after {
+    animation: none !important;
+  }
+}
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase touch target sizes */
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 24px;
+  }
+  
+  .nav-links a {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+  
+  /* Remove hover effects on touch devices */
+  .card:hover {
+    transform: none;
+  }
+  
+  /* Larger tap targets for icons */
+  .icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Mobile devices (up to 768px) */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+  
+  .card {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+  }
+  
+  /* Stack elements vertically */
+  .two-column-charts {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .reports-grid,
+  .cashflow-grid,
+  .patterns-grid,
+  .yoy-comparison {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .category-performance-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Tables become scrollable */
+  .data-table,
+  .cashflow-table table,
+  .account-summary-table table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Stats cards stack */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
+  }
+  
+  /* Charts responsive */
+  .chart-container {
+    height: 250px !important;
+  }
+  
+  /* Forms */
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  /* Buttons full width on mobile */
+  .btn {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  
+  /* Date filters stack */
+  .date-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .date-input {
+    width: 100%;
+  }
+  
+  /* Quick filters wrap */
+  .quick-filters {
+    flex-wrap: wrap;
+  }
+  
+  .quick-filter-btn {
+    flex: 1;
+    min-width: calc(50% - 4px);
+  }
+  
+  /* Report tabs scroll horizontally */
+  .report-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding-bottom: 8px;
+  }
+  
+  .report-tab {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  /* Budget cards full width */
+  .budgets-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Tips grid single column */
+  .tips-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Performance items stack */
+  .performance-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .performance-info {
+    margin-bottom: 8px;
+  }
+  
+  /* Day breakdown items stack */
+  .day-breakdown-item {
+    grid-template-columns: 1fr !important;
+    gap: 8px;
+  }
+  
+  .day-name {
+    margin-bottom: 4px;
+  }
+  
+  .day-amount,
+  .day-percentage {
+    text-align: left;
+    margin-top: 4px;
+  }
+  
+  /* Account/category cards */
+  .accounts-grid,
+  .categories-grid,
+  .currencies-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Modal adjustments */
+  .modal-content {
+    width: 95% !important;
+    max-height: 95vh;
+    padding: 16px;
+  }
+  
+  /* Net worth card */
+  .net-worth-value {
+    font-size: 2.5em !important;
+  }
+  
+  .account-breakdown-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Insights grid */
+  .insights-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Health score card */
+  .health-score-card {
+    min-height: 150px;
+  }
+  
+  /* Charts section */
+  .charts-section {
+    margin-bottom: 16px;
+  }
+  
+  /* Chart period switcher */
+  .chart-period-switcher {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .chart-period-btn {
+    flex: 1;
+    min-width: calc(33.333% - 6px);
+  }
+}
+
+/* Small mobile devices (up to 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 12px;
+  }
+  
+  .card {
+    padding: 12px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .net-worth-value {
+    font-size: 2em !important;
+  }
+  
+  .chart-container {
+    height: 200px !important;
+  }
+  
+  h1 {
+    font-size: 1.5em;
+  }
+  
+  h2 {
+    font-size: 1.3em;
+  }
+  
+  h3 {
+    font-size: 1.1em;
+  }
+  
+  /* Smaller text on very small screens */
+  .stat-value {
+    font-size: 1.5em;
+  }
+  
+  .cashflow-value {
+    font-size: 1.5em;
+  }
+  
+  /* Compact tables */
+  .data-table th,
+  .data-table td {
+    padding: 8px 4px;
+    font-size: 0.85em;
+  }
+  
+  /* Compact buttons */
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}
+
+/* Tablet devices (768px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    max-width: 100%;
+    padding: 0 20px;
+  }
+  
+  .two-column-charts {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .chart-container {
+    height: 300px;
+  }
+}
+
+/* Landscape mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .chart-container {
+    height: 200px !important;
+  }
+  
+  .modal-content {
+    max-height: 90vh;
+  }
+}
+

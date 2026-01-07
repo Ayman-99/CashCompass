@@ -1,0 +1,189 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  username      String    @unique
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  canAccessWeb  Boolean   @default(false) @map("can_access_web")
+  allowedIps    String?   @map("allowed_ips") // Comma-separated IPs for API access
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  accounts      Account[]
+  categories    Category[]
+  transactions  Transaction[]
+  auditLogs     AuditLog[]
+  currencies    Currency[]
+  alertRules    AlertRule[]
+  webhookConfig WebhookConfig?
+
+  @@map("users")
+}
+
+model Account {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  name          String
+  currency      String    @default("ILS")
+  balance       Decimal   @default(0) @db.Decimal(15, 2)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions  Transaction[]
+  alertRules    AlertRule[]
+
+  @@unique([userId, name], name: "unique_user_account")
+  @@map("accounts")
+}
+
+model Category {
+  id                Int       @id @default(autoincrement())
+  userId            Int       @map("user_id")
+  name              String
+  type              CategoryType
+  subcategory       String?
+  excludeFromReports Boolean  @default(false) @map("exclude_from_reports") // Exclude from regular spending reports (e.g., rent, large fixed expenses)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions  Transaction[]
+  alertRules    AlertRule[]
+
+  @@unique([userId, name, type], name: "unique_user_category")
+  @@index([userId, name, type, subcategory], name: "idx_user_category_subcategory")
+  @@map("categories")
+}
+
+enum CategoryType {
+  Income
+  Expense
+}
+
+model Transaction {
+  id              Int           @id @default(autoincrement())
+  userId          Int           @map("user_id")
+  accountId       Int           @map("account_id")
+  categoryId      Int?          @map("category_id")
+  excludeFromReports Boolean    @default(false) @map("exclude_from_reports") // Per-transaction exclusion (logging only)
+  dateIso         DateTime      @map("date_iso")
+  date            String?
+  amount          Decimal       @db.Decimal(15, 2)
+  currency        String        @default("ILS")
+  convertedAmount Decimal       @map("converted_amount") @db.Decimal(15, 2)
+  type            TransactionType
+  subcategory     String?
+  personCompany   String?       @map("person_company")
+  description     String?       @db.Text
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account         Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category        Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([userId, dateIso], name: "idx_user_date")
+  @@index([accountId], name: "idx_account")
+  @@index([categoryId], name: "idx_category")
+  @@index([type], name: "idx_type")
+  @@map("transactions")
+}
+
+enum TransactionType {
+  Income
+  Expense
+  Transfer
+}
+
+model Currency {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  code          String    // Currency code (ILS, USD, JD, etc.)
+  name          String    // Full name (Israeli Shekel, US Dollar, etc.)
+  rateToILS     Decimal   @map("rate_to_ils") @db.Decimal(15, 6) // Exchange rate to ILS (1 unit = X ILS)
+  isBase        Boolean   @default(false) @map("is_base") // Is this the base currency (ILS)
+  isActive      Boolean   @default(true) @map("is_active")
+  lastUpdated   DateTime? @map("last_updated") // When rate was last fetched from API
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, code], name: "unique_user_currency")
+  @@map("currencies")
+}
+
+model AuditLog {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  action        String    // CREATE, UPDATE, DELETE, LOGIN, etc.
+  entityType    String    @map("entity_type") // Account, Category, Transaction, User
+  entityId      Int?      @map("entity_id")
+  oldValues     String?   @map("old_values") @db.Text // JSON string of old values
+  newValues     String?   @map("new_values") @db.Text // JSON string of new values
+  ipAddress     String?   @map("ip_address")
+  userAgent     String?   @map("user_agent")
+  description   String?   @db.Text
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], name: "idx_audit_user")
+  @@index([entityType, entityId], name: "idx_audit_entity")
+  @@index([action], name: "idx_audit_action")
+  @@index([createdAt], name: "idx_audit_date")
+  @@map("audit_logs")
+}
+
+model AlertRule {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  name          String    // Rule name (e.g., "Monthly Budget", "Large Transaction")
+  ruleType      String    @map("rule_type") // BUDGET_LIMIT, LARGE_TRANSACTION, MONTHLY_LIMIT, ACCOUNT_BALANCE, RECURRING_DETECTION
+  isEnabled     Boolean   @default(true) @map("is_enabled")
+  threshold     Decimal   @db.Decimal(15, 2) // Threshold value
+  currency      String    @default("ILS")
+  categoryId    Int?      @map("category_id") // Optional: specific category (for backward compatibility)
+  categoryIds   Json?      @map("category_ids") // Optional: multiple categories (array of category IDs)
+  accountId     Int?      @map("account_id") // Optional: specific account
+  period        String?   // MONTHLY, WEEKLY, DAILY, etc.
+  lastAlertPercentage Decimal? @map("last_alert_percentage") @db.Decimal(5, 2) // Last percentage alert sent (90 or 100)
+  lastAlertPeriod String? @map("last_alert_period") // Period identifier for last alert (e.g., "2024-01")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category      Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  account       Account?  @relation(fields: [accountId], references: [id], onDelete: SetNull)
+
+  @@index([userId], name: "idx_alert_rule_user")
+  @@index([isEnabled], name: "idx_alert_rule_enabled")
+  @@map("alert_rules")
+}
+
+model WebhookConfig {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  webhookUrl    String    @map("webhook_url") @db.Text // Discord webhook URL
+  isEnabled     Boolean   @default(true) @map("is_enabled")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId], name: "unique_user_webhook")
+  @@map("webhook_configs")
+}
+
